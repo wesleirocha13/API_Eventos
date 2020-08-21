@@ -11,7 +11,7 @@ exports.get = async (req, res, next,) => {
         res.status(200).send(data);
     } catch (error) {
         res.status(500).send({
-            message: "Falha ao processar sua requisição"
+            message: "Falha ao processar sua requisição",
         });
     }
 }
@@ -31,11 +31,13 @@ exports.post = async (req, res, next,) => {
     try {
         await repository.create({
             name: req.body.name,
+            cnpj: req.body.cnpj,
             email: req.body.email,
             password: md5(req.body.password + global.SALT_KEY),
+            description: req.body.description,
             roles: req.body.roles,
         });
-        res.status(201).send({ message: 'Cliente cadastrado com sucesso!' });
+        res.status(201).send({ message: 'Cliente cadastrado com sucesso!', });
     } catch (error) {
         res.status(500).send({
             message: "Falha ao processar sua requisição"
@@ -59,8 +61,10 @@ exports.authenticate = async (req, res, next,) => {
 
         const token = await authService.generateToken({
             id: customer._id,
+            cnpj: customer.cnpj,
             email: customer.email,
             nome: customer.name,
+            description: customer.description,
             roles: customer.roles,
         });
 
@@ -94,8 +98,10 @@ exports.refreshToken = async (req, res, next,) => {
 
         const tokenData = await authService.generateToken({
             id: customer._id,
+            cnpj: customer.cnpj,
             email: customer.email,
             nome: customer.name,
+            description: customer.description,
             roles: customer.roles
         });
 
@@ -107,6 +113,19 @@ exports.refreshToken = async (req, res, next,) => {
             }
         });
 
+    } catch (error) {
+        res.status(500).send({
+            message: "Falha ao processar sua requisição"
+        });
+    }
+}
+
+exports.put = async (req, res, next,) => {
+    try {
+        const token = req.body.token || req.query.token || req.headers['x-access-token'];
+        const dados = await authService.decodeToken(token);
+        await repository.update(dados.id, req.body);
+        res.status(201).send({ message: "Cadastro removido com sucesso!" });
     } catch (error) {
         res.status(500).send({
             message: "Falha ao processar sua requisição"

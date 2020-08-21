@@ -10,5 +10,6 @@ router.post('/', CustomerController.post);
 //Rota criada para realizar login
 router.post('/authenticate', CustomerController.authenticate);
 router.post('/refresh-token', authService.authorize, CustomerController.refreshToken);
+router.put('/', authService.authorize, CustomerController.put);
 
 module.exports = router;

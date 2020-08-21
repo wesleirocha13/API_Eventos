@@ -8,6 +8,12 @@ const schema = new Schema({
         type: String,
         required: true,
     },
+
+    cnpj: {
+        type: String,
+        required: true,
+    },
+
     email: {
         type: String,
         required: true,
@@ -17,12 +23,19 @@ const schema = new Schema({
         type: String,
         required: true,
     },
+
+    description: {
+        type: String,
+        required: false
+    },
+
     roles: [{
         type: String,
         required: true,
         enum: ['user', 'admin'],
         default: 'user'
     }],
+
 });
 
 module.exports = mongoose.model('Customer', schema);

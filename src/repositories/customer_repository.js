@@ -13,7 +13,7 @@ exports.create = async (body) => {
     await order.save();
 }
 
-exports.authenticate = async (data) =>{
+exports.authenticate = async (data) => {
     const res = await Customer.findOne({
         email: data.email,
         password: data.password
@@ -21,7 +21,20 @@ exports.authenticate = async (data) =>{
     return res;
 }
 
-exports.getById = async (id) =>{
+exports.getById = async (id) => {
     const res = await Customer.findById(id);
     return res;
+}
+
+exports.update = async (id, body) => {
+    await Customer
+        .findByIdAndUpdate(id, {
+            // procura pelo o id e atualiza os campos desejados
+            $set: {
+                name: body.name,
+                cnpj: body.cnpj,
+                email: body.email,
+                description: body.description,
+            }
+        });
 }
