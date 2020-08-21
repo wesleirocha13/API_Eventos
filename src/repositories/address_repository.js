@@ -1,0 +1,44 @@
+'use strict'
+
+const mongoose = require("mongoose");
+const Address = mongoose.model('Address');
+
+exports.get = async () => {
+    const res = await Address.find().populate('customer', 'name email');
+    return res;
+}
+
+exports.getByUser = async (user) => {
+    // findById pesquisa pelo id
+    const res = await Address
+        .find({
+            customer: user
+        });
+    return res;
+}
+
+exports.create = async (body) => {
+    var addreess = new Address(body);
+    await addreess.save();
+}
+
+exports.update = async (id, body) => {
+    await Address
+        .findByIdAndUpdate(id, {
+            // procura pelo o id e atualiza os campos desejados
+            $set: {
+                state: body.state,
+                city: body.city,
+                district: body.district,
+                street: body.street,
+                number: body.number,
+                cep: body.cep,
+            }
+        });
+}
+
+exports.delete = async (id) => {
+    //Com o req.body.id ele recebe o paremtro do corpo da requisição, utilizo isso caso eu não queira exibir o id
+    await Address
+        .findOneAndRemove(id);
+}

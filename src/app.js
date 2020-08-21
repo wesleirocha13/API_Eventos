@@ -19,6 +19,7 @@ const Product = require('./models/product_model');
 const Customer = require('./models/customer_model');
 const Order = require('./models/order_model');
 const Event = require('./models/event_model');
+const Address = require('./models/address_model');
 
 // Carrga as rotas
 const indexRoute = require('./routes/index_route');
@@ -26,6 +27,7 @@ const productRoute = require('./routes/product_route');
 const customerRoute = require('./routes/customer_route');
 const orderRoute = require('./routes/order_route');
 const eventRoute = require('./routes/event_route');
+const addressRoute = require('./routes/address_route');
 
 app.use(cors());
 app.use(bodyParser.json({
@@ -48,5 +50,6 @@ app.use('/products', productRoute);
 app.use('/customers', customerRoute);
 app.use('/orders', orderRoute);
 app.use('/events', eventRoute);
+app.use('/adresses', addressRoute);
 
 module.exports = app;
