@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const Event = mongoose.model('Event');
 
 exports.get = async () => {
-    const res = await Event.find(); 
+    const res = await Event.find().populate('customer', 'name email');
     return res;    
 }
 
@@ -27,7 +27,8 @@ exports.update = async (id, body) => {
                 date: body.date,
                 description: body.description,
                 value: body.value,
-                contact: body.contact
+                contact: body.contact,
+                tags: body.tags,
             }
         });
 }

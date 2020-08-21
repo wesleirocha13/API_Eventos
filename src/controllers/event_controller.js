@@ -2,6 +2,7 @@
 
 const ValidationContract = require('../validator/fluent_validator');
 const repository = require('../repositories/event_repository');
+const authService = require('../services/auth_service');
 
 exports.get = async (req, res, next,) => {
     try {
@@ -36,7 +37,19 @@ exports.post = async (req, res, next,) => {
     }
 
     try {
-        await repository.create(req.body);
+
+        const token = req.body.token || req.query.token || req.headers['x-access-token'];
+        const data = await authService.decodeToken(token);
+
+        await repository.create({
+            customer: data.id,
+            name: req.body.name,
+            date: req.body.date,
+            description: req.body.description,
+            value: req.body.value,
+            contact: req.body.contact,
+            tags: req.body.tags,
+        });
         res.status(201).send({ message: 'Evento cadastrado com sucesso!' });
     } catch (error) {
         res.status(500).send({
@@ -58,7 +71,7 @@ exports.put = async (req, res, next,) => {
 
 exports.delete = async (req, res, next,) => {
     try {
-        await repository.delete(req.body.id);
+        await repository.delete(req.query.id);
         res.status(201).send({ message: "Evento removido com sucesso!" });
     } catch (error) {
         res.status(500).send({

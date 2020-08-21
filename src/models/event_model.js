@@ -4,6 +4,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
+    customer: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Customer",
+    },
     name: {
         type: String,
         required: true,
@@ -28,6 +32,11 @@ const schema = new Schema({
         required: true,
         trim: true
     },
+
+    tags: [{
+        type: String,
+        required: true
+    }],
 });
 
 module.exports = mongoose.model('Event', schema);
