@@ -33,7 +33,7 @@ exports.getByUser = async (req, res, next,) => {
 
 exports.post = async (req, res, next,) => {
     let contract = new ValidationContract();
-    contract.isRequired(req.body.cep, 'O campo itens é obrigatório');
+    contract.isRequired(req.body.cep, 'O campo CEP é obrigatório');
 
     if (!contract.isValid()) {
         res.status(400).send(contract.errors()).end();

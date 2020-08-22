@@ -11,23 +11,18 @@ const router = express.Router();
 
 
 // Conecta no banco
-
 mongoose.connect(config.connectionString , { useNewUrlParser: true, useUnifiedTopology: true });
 
 //Carrega models
-const Product = require('./models/product_model');
-const Customer = require('./models/customer_model');
-const Order = require('./models/order_model');
-const Event = require('./models/event_model');
 const Address = require('./models/address_model');
+const Company = require('./models/company_model');
+const Event = require('./models/event_model');
 
 // Carrga as rotas
 const indexRoute = require('./routes/index_route');
-const productRoute = require('./routes/product_route');
-const customerRoute = require('./routes/customer_route');
-const orderRoute = require('./routes/order_route');
-const eventRoute = require('./routes/event_route');
 const addressRoute = require('./routes/address_route');
+const companyRoute = require('./routes/company_route');
+const eventRoute = require('./routes/event_route');
 
 app.use(cors());
 app.use(bodyParser.json({
@@ -46,10 +41,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 
 app.use('/', indexRoute);
-app.use('/products', productRoute);
-app.use('/customers', customerRoute);
-app.use('/orders', orderRoute);
+app.use('/addresses', addressRoute);
+app.use('/companies', companyRoute);
 app.use('/events', eventRoute);
-app.use('/adresses', addressRoute);
 
 module.exports = app;

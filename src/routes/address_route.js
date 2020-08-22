@@ -11,4 +11,6 @@ router.put('/', authService.authorize, AddressController.put);
 router.delete('/', authService.authorize, AddressController.delete);
 router.post('/', AddressController.post);
 
+router.get('/gettest', AddressController.get); //apenas para fins de teste
+
 module.exports = router;

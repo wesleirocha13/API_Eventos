@@ -12,4 +12,6 @@ router.post('/', authService.authorize, EventController.post);
 router.put('/', authService.authorize, EventController.put);
 router.delete('/', authService.authorize, EventController.delete);
 
+router.post('/postteste', EventController.post);  //apenas para fins de teste
+
 module.exports = router;

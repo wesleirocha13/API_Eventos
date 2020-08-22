@@ -41,19 +41,11 @@ exports.post = async (req, res, next,) => {
         const token = req.body.token || req.query.token || req.headers['x-access-token'];
         const data = await authService.decodeToken(token);
 
-        await repository.create({
-            customer: data.id,
-            name: req.body.name,
-            date: req.body.date,
-            description: req.body.description,
-            value: req.body.value,
-            contact: req.body.contact,
-            tags: req.body.tags,
-        });
+        await repository.create(req.body);
         res.status(201).send({ message: 'Evento cadastrado com sucesso!' });
     } catch (error) {
         res.status(500).send({
-            message: "Falha ao processar sua requisição"
+            message: "Falha ao processar sua requisição: " + error
         });
     }
 }

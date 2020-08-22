@@ -4,29 +4,40 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
-    customer: {
+    company: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Customer",
+        ref: "Company",
     },
+
     name: {
         type: String,
         required: true,
         trim: true
     },
-    date: {
-        type: Date,
-        required: true,
-    },
+
     description: {
         type: String,
         required: true,
         trim: true
     },
+
+    category: {
+        type: String,
+        required: true,
+        trim: true
+    },
+
+    date: {
+        type: Date,
+        required: true,
+    },
+
     value: {
         type: Number,
         required: true,
         min: 0
     },
+
     contact: {
         type: String,
         required: true,
@@ -37,6 +48,7 @@ const schema = new Schema({
         type: String,
         required: true
     }],
+
 });
 
 module.exports = mongoose.model('Event', schema);

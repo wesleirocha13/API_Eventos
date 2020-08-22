@@ -4,40 +4,39 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
-    company: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Company",
-    },
-
-    state: {
+    name: {
         type: String,
         required: true,
     },
 
-    city: {
+    cnpj: {
         type: String,
         required: true,
     },
 
-    district: {
+    email: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    
+    password: {
         type: String,
         required: true,
     },
 
-    street: {
+    description: {
         type: String,
-        required: true,
+        required: false
     },
 
-    number: {
+    roles: [{
         type: String,
         required: true,
-    },
+        enum: ['user', 'admin'],
+        default: 'user'
+    }],
 
-    cep: {
-        type: String,
-        required: true,
-    },
 });
 
-module.exports = mongoose.model('Address', schema);
+module.exports = mongoose.model('Company', schema);

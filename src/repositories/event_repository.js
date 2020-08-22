@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const Event = mongoose.model('Event');
 
 exports.get = async () => {
-    const res = await Event.find().populate('customer', 'name email');
+    const res = await Event.find().populate('Company', 'name email');
     return res;    
 }
 
@@ -24,8 +24,9 @@ exports.update = async (id, body) => {
             // procura pelo o id e atualiza os campos desejados
             $set: {
                 name: body.name,
-                date: body.date,
                 description: body.description,
+                category: body.category,
+                date: body.date,
                 value: body.value,
                 contact: body.contact,
                 tags: body.tags,

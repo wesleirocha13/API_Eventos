@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const Address = mongoose.model('Address');
 
 exports.get = async () => {
-    const res = await Address.find().populate('customer', 'name email');
+    const res = await Address.find().populate('Company', 'name email');
     return res;
 }
 
@@ -12,14 +12,14 @@ exports.getByUser = async (user) => {
     // findById pesquisa pelo id
     const res = await Address
         .find({
-            customer: user
+            company: user
         });
     return res;
 }
 
 exports.create = async (body) => {
-    var addreess = new Address(body);
-    await addreess.save();
+    var address = new Address(body);
+    await address.save();
 }
 
 exports.update = async (id, body) => {
