@@ -8,6 +8,11 @@ exports.get = async () => {
     return res;
 }
 
+exports.getById = async (id) => {
+    const res = await Company.findById(id);
+    return res;
+}
+
 exports.create = async (body) => {
     var order = new Company(body);
     await order.save();
@@ -18,11 +23,6 @@ exports.authenticate = async (data) => {
         email: data.email,
         password: data.password
     });
-    return res;
-}
-
-exports.getById = async (id) => {
-    const res = await Company.findById(id);
     return res;
 }
 

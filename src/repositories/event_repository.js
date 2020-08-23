@@ -4,12 +4,20 @@ const mongoose = require("mongoose");
 const Event = mongoose.model('Event');
 
 exports.get = async () => {
-    const res = await Event.find().populate('Company', 'name email');
-    return res;    
+    const res = await Event.find().populate('company address').exec();
+    return res;
 }
 
 exports.getById = async (id) => {
-    const res = await Event.findById(id);
+    const res = await Event.findById(id).populate('company address').exec();
+    return res;
+}
+
+exports.getByFilter = async (filters) => {
+    const res = await Event.find({
+        category: filters.category,
+        value: { $lte: filters.value }
+    }).populate('company address').exec();
     return res;
 }
 
@@ -30,6 +38,7 @@ exports.update = async (id, body) => {
                 value: body.value,
                 contact: body.contact,
                 tags: body.tags,
+                address: body.address
             }
         });
 }

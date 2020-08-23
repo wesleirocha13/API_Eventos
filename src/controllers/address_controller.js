@@ -16,6 +16,17 @@ exports.get = async (req, res, next,) => {
     }
 }
 
+exports.getById = async (req, res, next,) => {
+    try {
+        var data = await repository.getById(req.query.id);
+        res.status(200).send(data);
+    } catch (error) {
+        res.status(500).send({
+            message: "Falha ao processar sua requisição: " + error,
+        });
+    }
+}
+
 exports.getByUser = async (req, res, next,) => {
     try {
 

@@ -26,6 +26,17 @@ exports.getById = async (req, res, next,) => {
     }
 }
 
+exports.getByFilter = async (req, res, next,) => {
+    try {
+        var data = await repository.getByFilter(req.query);
+        res.status(200).send(data);
+    } catch (error) {
+        res.status(500).send({
+            message: "Falha ao processar sua requisição"
+        });
+    }
+}
+
 exports.post = async (req, res, next,) => {
     let contract = new ValidationContract();
     contract.hasMinLen(req.body.name, 3, 'O nome deve conter pelo menos 3 caracteres');
@@ -41,6 +52,17 @@ exports.post = async (req, res, next,) => {
         const token = req.body.token || req.query.token || req.headers['x-access-token'];
         const data = await authService.decodeToken(token);
 
+        await repository.create(req.body);
+        res.status(201).send({ message: 'Evento cadastrado com sucesso!' });
+    } catch (error) {
+        res.status(500).send({
+            message: "Falha ao processar sua requisição: " + error
+        });
+    }
+}
+
+exports.postTeste = async (req, res, next,) => {
+    try {
         await repository.create(req.body);
         res.status(201).send({ message: 'Evento cadastrado com sucesso!' });
     } catch (error) {

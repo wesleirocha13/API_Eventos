@@ -16,6 +16,17 @@ exports.get = async (req, res, next,) => {
     }
 }
 
+exports.getById = async (req, res, next,) => {
+    try {
+        var data = await repository.getById(req.query.id);
+        res.status(200).send(data);
+    } catch (error) {
+        res.status(500).send({
+            message: "Falha ao processar sua requisição: " + error,
+        });
+    }
+}
+
 exports.post = async (req, res, next,) => {
     let contract = new ValidationContract();
     contract.hasMinLen(req.body.name, 3, 'O nome deve conter pelo menos 3 caracteres');
@@ -45,7 +56,7 @@ exports.authenticate = async (req, res, next,) => {
             password: md5(req.body.password + global.SALT_KEY),
         });
 
-        if(!company){
+        if (!company) {
             res.status(404).send({
                 message: 'Email ou senha inválidos'
             });
@@ -82,7 +93,7 @@ exports.refreshToken = async (req, res, next,) => {
         const data = await authService.decodeToken(token);
 
         const company = await repository.getById(data.id);
-        if(!company){
+        if (!company) {
             res.status(404).send({
                 message: 'Compania não encontrada.'
             });
