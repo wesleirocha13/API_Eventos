@@ -28,6 +28,7 @@ exports.getById = async (req, res, next,) => {
 }
 
 exports.post = async (req, res, next,) => {
+    console.log(req.body);
     let contract = new ValidationContract();
     contract.hasMinLen(req.body.name, 3, 'O nome deve conter pelo menos 3 caracteres');
     contract.isEmail(req.body.email, 'E-mail inválido!');
@@ -37,8 +38,6 @@ exports.post = async (req, res, next,) => {
         res.status(400).send(contract.errors()).end();
         return;
     }
-    // Se eu quiser ao invés de colocar o req.body aqui eu posso passar parametro por paramentro 
-    //Ex: product.title = req.body.title e assim sucessivamente
     try {
         await repository.create(req.body);
         res.status(201).send({ message: 'Compania cadastrada com sucesso!', });

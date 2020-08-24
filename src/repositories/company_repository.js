@@ -15,7 +15,11 @@ exports.getById = async (id) => {
 
 exports.create = async (body) => {
     var order = new Company(body);
-    await order.save();
+    let response;
+    await order.save((err, doc)=>{
+        response = {err, doc};
+    });
+    return response;
 }
 
 exports.authenticate = async (data) => {
