@@ -2,6 +2,7 @@
 
 const ValidationContract = require('../validator/fluent_validator');
 const repository = require('../repositories/company_repository');
+const repositoryAddress = require('../repositories/address_repository');
 const md5 = require('md5');
 const authService = require('../services/auth_service');
 
@@ -28,18 +29,18 @@ exports.getById = async (req, res, next,) => {
 }
 
 exports.post = async (req, res, next,) => {
-    console.log(req.body);
-    let contract = new ValidationContract();
-    contract.hasMinLen(req.body.name, 3, 'O nome deve conter pelo menos 3 caracteres');
-    contract.isEmail(req.body.email, 'E-mail inválido!');
-    contract.hasMinLen(req.body.password, 6, 'A senha deve conter pelo menos 6 caracteres');
-
-    if (!contract.isValid()) {
-        res.status(400).send(contract.errors()).end();
-        return;
-    }
     try {
-        await repository.create(req.body);
+        await repository.create(req.body.company);
+        const idCompany = await repository.getBycnpj(req.body.company.cnpj);
+        await repositoryAddress.create({
+            company: idCompany._id,
+            state: req.body.address.state,
+            city: req.body.address.city,
+            district: req.body.address.district,
+            street: req.body.address.street,
+            number: req.body.address.number,
+            cep: req.body.address.cep,
+        });
         res.status(201).send({ message: 'Compania cadastrada com sucesso!', });
     } catch (error) {
         res.status(500).send({

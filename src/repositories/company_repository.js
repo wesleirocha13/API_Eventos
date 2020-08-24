@@ -13,6 +13,14 @@ exports.getById = async (id) => {
     return res;
 }
 
+exports.getBycnpj = async (cnpj) => {
+    const res = await Company
+        .findOne({
+            cnpj: cnpj,
+        }, "_id");
+    return res;
+}
+
 exports.create = async (body) => {
     var order = new Company(body);
     let response;

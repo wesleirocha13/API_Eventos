@@ -13,6 +13,4 @@ router.post('/authenticate', CompanyController.authenticate);
 router.post('/refresh-token', authService.authorize, CompanyController.refreshToken);
 router.put('/', authService.authorize, CompanyController.put);
 
-router.post('/postteste', CompanyController.post); //apenas para fins de teste
-
 module.exports = router;

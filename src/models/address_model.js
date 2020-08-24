@@ -3,12 +3,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const schema = new Schema({
-    _id: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-    },
-    
+const schema = new Schema({    
     company: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Company",
