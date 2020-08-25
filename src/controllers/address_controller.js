@@ -64,7 +64,7 @@ exports.post = async (req, res, next,) => {
 
 exports.put = async (req, res, next,) => {
     try {
-        await repository.update(req.query.id, req.body);
+        await repository.update(req.body.id, req.body);
         res.status(201).send({ message: "Endereço atualizado com sucesso!" });
     } catch (error) {
         res.status(500).send({

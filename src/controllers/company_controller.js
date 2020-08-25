@@ -19,7 +19,9 @@ exports.get = async (req, res, next,) => {
 
 exports.getById = async (req, res, next,) => {
     try {
-        var data = await repository.getById(req.query.id);
+        const token = req.body.token || req.query.token || req.headers['x-access-token'];
+        const dados = await authService.decodeToken(token);
+        var data = await repository.getById(dados.id);
         res.status(200).send(data);
     } catch (error) {
         res.status(500).send({
@@ -30,7 +32,15 @@ exports.getById = async (req, res, next,) => {
 
 exports.post = async (req, res, next,) => {
     try {
-        await repository.create(req.body.company);
+        await repository.create({
+            name: req.body.company.name,
+            cnpj: req.body.company.cnpj,
+            email: req.body.company.email,
+            password: md5(req.body.company.password + global.SALT_KEY),
+            name: req.body.company.name,
+            description: req.body.company.description,
+            roles: req.body.company.roles,
+        });
         const idCompany = await repository.getBycnpj(req.body.company.cnpj);
         await repositoryAddress.create({
             company: idCompany._id,
@@ -75,8 +85,9 @@ exports.authenticate = async (req, res, next,) => {
         res.status(201).send({
             token: token,
             data: {
-                email: company.email,
-                name: company.name
+                id: company._id,
+                name: company.name,
+                cnpj: company.cnpj,
             }
         });
 
@@ -129,7 +140,7 @@ exports.put = async (req, res, next,) => {
         const token = req.body.token || req.query.token || req.headers['x-access-token'];
         const dados = await authService.decodeToken(token);
         await repository.update(dados.id, req.body);
-        res.status(201).send({ message: "Cadastro removido com sucesso!" });
+        res.status(201).send({ message: "Cadastro atualizado com sucesso!" });
     } catch (error) {
         res.status(500).send({
             message: "Falha ao processar sua requisição: " + error

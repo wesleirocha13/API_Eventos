@@ -46,7 +46,6 @@ exports.update = async (id, body) => {
                 name: body.name,
                 cnpj: body.cnpj,
                 email: body.email,
-                password: body.password,
                 description: body.description,
                 roles: body.roles
             }
