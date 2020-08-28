@@ -8,6 +8,13 @@ exports.get = async () => {
     return res;
 }
 
+exports.getByUser = async (id) => {
+    const res = await Event.find({
+        company: id,
+    }).populate('company address').exec();
+    return res;
+}
+
 exports.getById = async (id) => {
     const res = await Event.findById(id).populate('company address').exec();
     return res;
@@ -15,6 +22,15 @@ exports.getById = async (id) => {
 
 exports.getByFilter = async (filters) => {
     const res = await Event.find({
+        category: filters.category,
+        value: { $lte: filters.value }
+    }).populate('company address').exec();
+    return res;
+}
+
+exports.getByFilterAuth = async (id, filters) => {
+    const res = await Event.find({
+        id: id,
         category: filters.category,
         value: { $lte: filters.value }
     }).populate('company address').exec();
@@ -37,7 +53,6 @@ exports.update = async (id, body) => {
                 date: body.date,
                 value: body.value,
                 contact: body.contact,
-                tags: body.tags,
                 address: body.address
             }
         });
@@ -46,5 +61,5 @@ exports.update = async (id, body) => {
 exports.delete = async (id) => {
     //Com o req.body.id ele recebe o paremtro do corpo da requisição, utilizo isso caso eu não queira exibir o id
     await Event
-        .findOneAndRemove(id);
+        .findByIdAndDelete(id);
 }

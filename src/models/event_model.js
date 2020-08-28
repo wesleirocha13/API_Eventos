@@ -48,12 +48,6 @@ const schema = new Schema({
         required: true,
         trim: true
     },
-
-    tags: [{
-        type: String,
-        required: true
-    }],
-
 });
 
 module.exports = mongoose.model('Event', schema);
