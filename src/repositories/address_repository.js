@@ -44,5 +44,5 @@ exports.update = async (id, body) => {
 exports.delete = async (id) => {
     //Com o req.body.id ele recebe o paremtro do corpo da requisição, utilizo isso caso eu não queira exibir o id
     await Address
-        .findOneAndRemove(id);
+        .findByIdAndDelete(id);
 }

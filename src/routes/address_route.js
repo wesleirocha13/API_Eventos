@@ -10,7 +10,7 @@ router.get('/id', AddressController.getById);
 router.get('/user/', authService.authorize, AddressController.getByUser);
 router.put('/', authService.authorize, AddressController.put);
 router.delete('/', authService.authorize, AddressController.delete);
-router.post('/', AddressController.post);
+router.post('/', authService.authorize, AddressController.post);
 
 router.get('/gettest', AddressController.get); //apenas para fins de teste
 
