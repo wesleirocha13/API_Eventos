@@ -30,9 +30,38 @@ exports.getByFilter = async (filters) => {
 
 exports.getByFilterAuth = async (id, filters) => {
     const res = await Event.find({
-        id: id,
+        company: id,
         category: filters.category,
-        value: { $lte: filters.value }
+        value: { $lte: filters.value },
+        date: {$gte: new Date(filters.date),
+                $lt: new Date(filters.date2)}
+    }).populate('company address').exec();
+    return res;
+}
+
+exports.getByFilterAuthCategory = async (id, category,value) => {
+    const res = await Event.find({
+        company: id,
+        category: category,
+        value: { $lte: value }
+    }).populate('company address').exec();
+    return res;
+}
+
+exports.getByFilterAuthDate = async (id, filters, value) => {
+    const res = await Event.find({
+        company: id,
+        value: { $lte: value },
+        date: {$gte: new Date(filters.date),
+                $lt: new Date(filters.date2)}
+    }).populate('company address').exec();
+    return res;
+}
+
+exports.getByFilterAuthValue = async (id, filters) => {
+    const res = await Event.find({
+        company: id,
+        value: { $lte: filters.value },  
     }).populate('company address').exec();
     return res;
 }

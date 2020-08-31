@@ -55,9 +55,40 @@ exports.getByFilterAuth = async (req, res, next,) => {
     try {
         const token = req.body.token || req.query.token || req.headers['x-access-token'];
         const dados = await authService.decodeToken(token);
-        var data = await repository.getByFilterAuth(dados.id, req.query);
+        if(req.query.date == "2020-01-01T03:00:00.000Z" && req.query.category != 'categoryNull'){
+            var value;
+            if(req.query.value == ''){
+                value = 99999
+            }else{
+                value = req.query.value;
+            }
+            var data = await repository.getByFilterAuthCategory(dados.id, req.query.category, value); //Pesquisar sem a data
+
+        }else if(req.query.date != "2020-01-01T03:00:00.000Z" && req.query.category == 'categoryNull') {
+            var value;
+            if(req.query.value == ''){
+                value = 99999
+            }else{
+                value = req.query.value;
+            }
+            var data = await repository.getByFilterAuthDate(dados.id, req.query, value); //Pesquisar sem categoria
+
+        }else if(req.query.date == "2020-01-01T03:00:00.000Z" && req.query.category == 'categoryNull'){
+            var value;
+            if(req.query.value == ''){
+                value = 99999
+            }else{
+                value = req.query.value;
+            }
+            var data = await repository.getByFilterAuthValue(dados.id, req.query); //Pesquisar somente valor   
+
+        }else if(req.query.date != "2020-01-01T03:00:00.000Z" && req.query.category != 'categoryNull' && req.query.value != ''){
+            var data = await repository.getByFilterAuth(dados.id, req.query); //Pesquisar com todos os campos
+        }
+
         res.status(200).send(data);
     } catch (error) {
+        console.log(error)
         res.status(500).send({
             message: "Falha ao processar sua requisição"
         });
