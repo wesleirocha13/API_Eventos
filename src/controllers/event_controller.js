@@ -79,11 +79,8 @@ exports.getByFilter = async (req, res, next,) => {
             }
             var data = await repository.getByFilter(value, req.query); //Pesquisar com todos os campos
         }
-        console.log(data)
-       // var data = await repository.getByFilter(req.query);
         res.status(200).send(data);
     } catch (error) {
-        console.log(error)
         res.status(500).send({
             message: "Falha ao processar sua requisição"
         });
@@ -130,10 +127,8 @@ exports.getByFilterAuth = async (req, res, next,) => {
             }
             var data = await repository.getByFilterAuth(dados.id, req.query, value); //Pesquisar com todos os campos
         }
-
         res.status(200).send(data);
     } catch (error) {
-        console.log(error)
         res.status(500).send({
             message: "Falha ao processar sua requisição"
         });
