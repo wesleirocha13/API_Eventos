@@ -6,7 +6,8 @@ const authService = require('../services/auth_service');
 
 exports.get = async (req, res, next,) => {
     try {
-        var data = await repository.get();
+        var date = new Date();
+        var data = await repository.get(date);
         res.status(200).send(data);
     } catch (error) {
         res.status(500).send({
@@ -42,9 +43,47 @@ exports.getById = async (req, res, next,) => {
 
 exports.getByFilter = async (req, res, next,) => {
     try {
-        var data = await repository.getByFilter(req.query);
+        if(req.query.date == "2020-01-01T03:00:00.000Z" && req.query.category != 'categoryNull'){
+            var value;
+            if(req.query.value == ''){
+                value = 99999
+            }else{
+                value = req.query.value;
+            }
+            var data = await repository.getByFilterCategory(req.query.category, value); //Pesquisar sem a data
+
+        }else if(req.query.date != "2020-01-01T03:00:00.000Z" && req.query.category == 'categoryNull') {
+            var value;
+            if(req.query.value == ''){
+                value = 99999
+            }else{
+                value = req.query.value;
+            }
+            var data = await repository.getByFilterDate(req.query, value); //Pesquisar sem categoria
+
+        }else if(req.query.date == "2020-01-01T03:00:00.000Z" && req.query.category == 'categoryNull'){
+            var value;
+            if(req.query.value == ''){
+                value = 99999
+            }else{
+                value = req.query.value;
+            }
+            var data = await repository.getByFilterValue(req.query); //Pesquisar somente valor   
+
+        }else if(req.query.date != "2020-01-01T03:00:00.000Z" && req.query.category != 'categoryNull'){
+            var value;
+            if(req.query.value == ''){
+                value = 99999
+            }else{
+                value = req.query.value;
+            }
+            var data = await repository.getByFilter(value, req.query); //Pesquisar com todos os campos
+        }
+        console.log(data)
+       // var data = await repository.getByFilter(req.query);
         res.status(200).send(data);
     } catch (error) {
+        console.log(error)
         res.status(500).send({
             message: "Falha ao processar sua requisição"
         });
@@ -82,8 +121,14 @@ exports.getByFilterAuth = async (req, res, next,) => {
             }
             var data = await repository.getByFilterAuthValue(dados.id, req.query); //Pesquisar somente valor   
 
-        }else if(req.query.date != "2020-01-01T03:00:00.000Z" && req.query.category != 'categoryNull' && req.query.value != ''){
-            var data = await repository.getByFilterAuth(dados.id, req.query); //Pesquisar com todos os campos
+        }else if(req.query.date != "2020-01-01T03:00:00.000Z" && req.query.category != 'categoryNull'){
+            var value;
+            if(req.query.value == ''){
+                value = 99999
+            }else{
+                value = req.query.value;
+            }
+            var data = await repository.getByFilterAuth(dados.id, req.query, value); //Pesquisar com todos os campos
         }
 
         res.status(200).send(data);
@@ -99,17 +144,6 @@ exports.post = async (req, res, next,) => {
     try {
         const token = req.body.token || req.query.token || req.headers['x-access-token'];
         const data = await authService.decodeToken(token);
-        await repository.create(req.body);
-        res.status(201).send({ message: 'Evento cadastrado com sucesso!' });
-    } catch (error) {
-        res.status(500).send({
-            message: "Falha ao processar sua requisição: " + error
-        });
-    }
-}
-
-exports.postTeste = async (req, res, next,) => {
-    try {
         await repository.create(req.body);
         res.status(201).send({ message: 'Evento cadastrado com sucesso!' });
     } catch (error) {

@@ -3,15 +3,17 @@
 const mongoose = require("mongoose");
 const Event = mongoose.model('Event');
 
-exports.get = async () => {
-    const res = await Event.find().populate('company address').exec();
+exports.get = async (date) => {
+    const res = await Event.find({
+    date: {$gt: date}
+    }).sort( { date : 1} ).populate('company address').exec();
     return res;
 }
 
 exports.getByUser = async (id) => {
     const res = await Event.find({
         company: id,
-    }).populate('company address').exec();
+    }).sort( { date : -1} ).populate('company address').exec();
     return res;
 }
 
@@ -20,19 +22,47 @@ exports.getById = async (id) => {
     return res;
 }
 
-exports.getByFilter = async (filters) => {
+//Filtros sem autenticação
+exports.getByFilter = async (value, filters) => {
     const res = await Event.find({
         category: filters.category,
-        value: { $lte: filters.value }
+        value: { $lte: value },
+        date: {$gte: new Date(filters.date),
+                $lt: new Date(filters.date2)}
     }).populate('company address').exec();
     return res;
 }
 
-exports.getByFilterAuth = async (id, filters) => {
+exports.getByFilterCategory = async (category,value) => {
+    const res = await Event.find({
+        category: category,
+        value: { $lte: value }
+    }).populate('company address').exec();
+    return res;
+}
+
+exports.getByFilterDate = async (filters, value) => {
+    const res = await Event.find({
+        value: { $lte: value },
+        date: {$gte: new Date(filters.date),
+                $lt: new Date(filters.date2)}
+    }).populate('company address').exec();
+    return res;
+}
+
+exports.getByFilterValue = async (filters) => {
+    const res = await Event.find({
+        value: { $lte: filters.value },  
+    }).populate('company address').exec();
+    return res;
+}
+
+//Filtros com autenticação
+exports.getByFilterAuth = async (id, filters, value) => {
     const res = await Event.find({
         company: id,
         category: filters.category,
-        value: { $lte: filters.value },
+        value: { $lte: value },
         date: {$gte: new Date(filters.date),
                 $lt: new Date(filters.date2)}
     }).populate('company address').exec();
