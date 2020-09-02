@@ -32,7 +32,6 @@ exports.getByUser = async (req, res, next,) => {
 exports.getById = async (req, res, next,) => {
     try {
         var data = await repository.getById(req.query.id);
-        console.log(data);
         res.status(200).send(data);
     } catch (error) {
         res.status(500).send({
