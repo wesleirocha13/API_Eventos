@@ -98,6 +98,29 @@ exports.authenticate = async (req, res, next,) => {
     }
 }
 
+exports.authenticatePassword = async (req, res, next,) => {
+    try {
+        const token = req.body.token || req.query.token || req.headers['x-access-token'];
+        const dados = await authService.decodeToken(token);
+        const company = await repository.authenticatePassword({
+            cnpj: dados.cnpj,
+            password: md5(req.body.password + global.SALT_KEY),
+        });
+
+        if (!company) {
+            res.status(404).send({
+                message: 'Email ou senha inválidos'
+            });
+            return;
+        }
+        res.status(201).send({ message: "Senha reconhecida" });
+    } catch (error) {
+        res.status(500).send({
+            message: "Falha ao processar sua requisição: " + error
+        });
+    }
+}
+
 exports.refreshToken = async (req, res, next,) => {
     try {
         const token = req.body.token || req.query.token || req.headers['x-access-token'];
@@ -128,6 +151,22 @@ exports.refreshToken = async (req, res, next,) => {
             }
         });
 
+    } catch (error) {
+        res.status(500).send({
+            message: "Falha ao processar sua requisição: " + error
+        });
+    }
+}
+
+exports.putPassword = async (req, res, next,) => {
+    try {
+        const token = req.body.token || req.query.token || req.headers['x-access-token'];
+        const dados = await authService.decodeToken(token);
+        await repository.updatePassword({
+            id: dados.id, 
+            password: md5(req.body.password + global.SALT_KEY)
+        });
+        res.status(201).send({ message: "Senha atualizado com sucesso!" });
     } catch (error) {
         res.status(500).send({
             message: "Falha ao processar sua requisição: " + error

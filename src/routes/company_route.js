@@ -10,7 +10,9 @@ router.get('/id', authService.authorize, CompanyController.getById);
 router.post('/', CompanyController.post);
 //Rota criada para realizar login
 router.post('/authenticate', CompanyController.authenticate);
-router.post('/refresh-token', authService.authorize, CompanyController.refreshToken);
+router.post('/password', CompanyController.authenticatePassword);
+router.post('/refresh-token', authService.authorize, authService.authorize, CompanyController.refreshToken);
 router.put('/', authService.authorize, CompanyController.put);
+router.put('/password', authService.authorize, CompanyController.putPassword);
 
 module.exports = router;

@@ -38,6 +38,23 @@ exports.authenticate = async (data) => {
     return res;
 }
 
+exports.authenticatePassword = async (data) => {
+    const res = await Company.findOne({
+        cnpj: data.cnpj,
+        password: data.password
+    });
+    return res;
+}
+
+exports.updatePassword = async (data) => {
+    await Company
+        .findByIdAndUpdate(data.id, {
+            $set: {
+                password: data.password,
+            }
+        });
+}
+
 exports.update = async (id, body) => {
     await Company
         .findByIdAndUpdate(id, {
