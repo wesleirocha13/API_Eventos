@@ -14,5 +14,7 @@ router.post('/password', CompanyController.authenticatePassword);
 router.post('/refresh-token', authService.authorize, authService.authorize, CompanyController.refreshToken);
 router.put('/', authService.authorize, CompanyController.put);
 router.put('/password', authService.authorize, CompanyController.putPassword);
+router.get('/forgotPassword', CompanyController.fogotPassword);
+router.put('/newPassword', CompanyController.newPassword);
 
 module.exports = router;

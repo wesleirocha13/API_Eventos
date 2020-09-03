@@ -46,6 +46,14 @@ exports.authenticatePassword = async (data) => {
     return res;
 }
 
+exports.fogotPassword = async (data) => {
+    const res = await Company.findOne({
+        email: data.email,
+        cnpj: data.cnpj,
+    });
+    return res;
+}
+
 exports.updatePassword = async (data) => {
     await Company
         .findByIdAndUpdate(data.id, {

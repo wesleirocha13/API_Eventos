@@ -121,6 +121,24 @@ exports.authenticatePassword = async (req, res, next,) => {
     }
 }
 
+exports.fogotPassword = async (req, res, next,) => {
+    try {
+        const data = await repository.fogotPassword(req.query);
+        if (!data) {
+            res.status(404).send({
+                message: 'Email ou cnpj inválidos'
+            });
+            return;
+        }
+        console.log(data)
+        res.status(200).send(data);
+    } catch (error) {
+        res.status(500).send({
+            message: "Falha ao processar sua requisição: " + error
+        });
+    }
+}
+
 exports.refreshToken = async (req, res, next,) => {
     try {
         const token = req.body.token || req.query.token || req.headers['x-access-token'];
@@ -180,6 +198,22 @@ exports.put = async (req, res, next,) => {
         const dados = await authService.decodeToken(token);
         await repository.update(dados.id, req.body);
         res.status(201).send({ message: "Cadastro atualizado com sucesso!" });
+    } catch (error) {
+        res.status(500).send({
+            message: "Falha ao processar sua requisição: " + error
+        });
+    }
+}
+
+exports.newPassword = async (req, res, next,) => {
+    try {
+        var newPassword = '1234567';
+        await repository.updatePassword({
+            id: req.body.id, 
+            password: md5(newPassword + global.SALT_KEY)
+        });
+        console.log()
+        res.status(201).send(newPassword);
     } catch (error) {
         res.status(500).send({
             message: "Falha ao processar sua requisição: " + error
