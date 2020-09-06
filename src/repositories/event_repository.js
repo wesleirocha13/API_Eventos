@@ -120,19 +120,50 @@ exports.create = async (body) => {
 };
 
 exports.update = async (id, body) => {
-  await Event.findByIdAndUpdate(id, {
-    // procura pelo o id e atualiza os campos desejados
-    $set: {
-      name: body.name,
-      description: body.description,
-      category: body.category,
-      date: body.date,
-      value: body.value,
-      contact: body.contact,
-      address: body.address,
-      image: body.image,
-    },
-  });
+  if (body.image) {
+    await Event.findByIdAndUpdate(id, {
+      // procura pelo o id e atualiza os campos desejados
+      $set: {
+        name: body.name,
+        description: body.description,
+        category: body.category,
+        date: body.date,
+        value: body.value,
+        contact: body.contact,
+        address: body.address,
+        image: body.image != "image" ? body.image : null,
+      },
+    });
+  } else {
+    if (body.remove) {
+      await Event.findByIdAndUpdate(id, {
+        // procura pelo o id e atualiza os campos desejados
+        $set: {
+          name: body.name,
+          description: body.description,
+          category: body.category,
+          date: body.date,
+          value: body.value,
+          contact: body.contact,
+          address: body.address,
+          image: null
+        },
+      });
+    } else {
+      await Event.findByIdAndUpdate(id, {
+        // procura pelo o id e atualiza os campos desejados
+        $set: {
+          name: body.name,
+          description: body.description,
+          category: body.category,
+          date: body.date,
+          value: body.value,
+          contact: body.contact,
+          address: body.address,
+        },
+      });
+    }
+  }
 };
 
 exports.delete = async (id) => {
